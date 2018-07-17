@@ -12,6 +12,7 @@ defmodule MyApp.Application do
       supervisor(MyApp.Repo, []),
       # Start the endpoint when the application starts
       supervisor(MyAppWeb.Endpoint, []),
+      supervisor(MyAppWeb.Presence, []),
       # Start your own worker by calling: MyApp.Worker.start_link(arg1, arg2, arg3)
       # worker(MyApp.Worker, [arg1, arg2, arg3]),
     ]
