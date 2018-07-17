@@ -1,5 +1,6 @@
 defmodule MyAppWeb.LobbyChannel do
   use MyAppWeb, :channel
+  alias MyAppWeb.Presence
 
   def join("lobby", payload, socket) do
     user_id =
@@ -12,12 +13,24 @@ defmodule MyAppWeb.LobbyChannel do
   end
 
   def handle_info(:after_join, socket) do
-    broadcast socket, "updated", %{count: 0}
+    Presence.track(socket, socket.assigns.user_id, %{})
+
+    broadcast socket, "updated", %{count: count_users(socket)}
+
     {:noreply, socket}
   end
 
   def terminate(_reason, socket) do
-    broadcast socket, "updated", %{count: 0}
+    Presence.untrack(socket, socket.assigns.user_id)
+
+    broadcast socket, "updated", %{count: count_users(socket)}
+
     :ok
+  end
+
+  defp count_users(socket) do
+    Presence.list(socket)
+    |> Map.keys
+    |> Enum.count
   end
 end
