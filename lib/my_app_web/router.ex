@@ -21,7 +21,8 @@ defmodule MyAppWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", MyAppWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", MyAppWeb.Api, as: :api do
+    pipe_through :api
+    resources "/users", UserController
+  end
 end
